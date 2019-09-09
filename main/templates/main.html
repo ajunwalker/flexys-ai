@@ -1,0 +1,95 @@
+<html>
+
+  <head>
+    {% load static %}
+    <style>
+      @font-face {
+        font-family: "Azedo";
+        src: url("{% static 'azedo/Azedo-Bold.otf' %}") format("opentype");
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="{% static 'main.js' %}"></script>
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+
+    <script>
+      start("{{id}}")
+      fetch_models("{{id}}")
+    </script>
+  </head>
+
+  <body>
+
+    <!-- BEGIN FIRST NAVIGATION BAR -->
+    <nav class="nav-black">
+      <div class="nav-container">
+        <div class="nav-title">Flexys</div>
+      </div>
+    </nav>
+    <!-- END FIRST NAVIGATION BAR -->
+
+    <!-- BEGIN SECOND NAVIGATION BAR -->
+    <nav class="nav-blue">
+        <button id="data-analytics-button" class="tab-button-selected">Data Analysis</button>
+        <button id="machine-learning-button" class="tab-button">Machine Learning</button>
+    </nav>
+    <!-- END SECOND NAVIGATION BAR -->
+
+    <!-- BEGIN MAIN CONTAINER -->
+    <div class="main-content-container">
+
+      <!-- BEGIN DATA ANALYTICS VIEW -->
+      <div id="data-analytics-view">
+        <div class="table-bubble">
+          <div class="bubble-title">Numerical Columns</div>
+          <table id="numerical-table">
+            <thead>
+              <th>Name</th>
+              <th>Filled</th>
+              <th>Min</th>
+              <th>Mean</th>
+              <th>Median</th>
+              <th>Max</th>
+            <thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="table-bubble secondary-bubble">
+          <div class="bubble-title">Categorical Columns</div>
+          <table id="categorical-table">
+            <thead>
+              <th>Name</th>
+              <th>Filled</th>
+              <th>Unique</th>
+            <thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- END DATA ANALYTICS VIEW -->
+
+      <!-- BEGIN MACHINE LEARNING VIEW -->
+      <div id="machine-learning-view">
+        <div class="performance-bubble">
+          <div class="bubble-title plot-title">Model Performances</div>
+          <canvas id="myChart" width="860" height="300"></canvas>
+        </div>
+
+        <!-- BEGIN SECOND ROW -->
+        <div class="importance-bubble secondary-bubble">
+          <div class="bubble-title plot-title">Feature Importances</div>
+          <canvas id="importanceChart" width="860" height="350"></canvas>
+        </div>
+        <!-- END SECOND ROW -->
+      </div>
+      <!-- END MACHINE LEARNING VIEW -->
+
+    </div>
+    <!-- END MAIN CONTAINER -->
+
+  </body>
+
+</html>

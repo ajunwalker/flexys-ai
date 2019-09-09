@@ -1,0 +1,217 @@
+@font-face {
+   font-family: 'Open Sans Light';
+   font-style: normal;
+   font-weight: 300;
+   src:url(https://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTRa1RVmPjeKy21_GQJaLlJI.woff) format('woff');
+}
+
+body {
+    background-color: #f4f4f4;
+    font-family: "Open Sans";
+    margin: 0px;
+}
+
+table {
+    width: 94%;
+    font-family: "Open Sans Light";
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+td {
+  border-top: 1px solid #ddd;
+}
+
+th {
+  border-top: 3px solid #ccc;
+  border-bottom: 3px solid #ccc;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.landing-title {
+    font-family: "Open Sans Light";
+    color: white;
+    text-align: center;
+    font-size: 60px;
+    margin-top: 100px;
+}
+
+input[type='file'] {
+    display: none;
+}
+
+.home-gradient {
+    width: 100%;
+    min-height: 100vh;
+    background-image: linear-gradient(to bottom, #124a90, #98bec8);
+}
+
+.button-wrapper {
+    text-align: center;
+    padding-top: 50px;
+}
+
+.upload-button {
+    width: 200px;
+    padding: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    color:white;
+    border-radius: 5px;
+    background-color: #4CD964;
+    font-size: 22px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+.upload-button:hover {
+    background-color: #2AB742;
+    box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0);
+}
+
+.nav-black {
+    background-color: #323232;
+    height: 50px;
+}
+
+.nav-blue {
+    background-color: #346cb0;
+    height: 70px;
+    text-align: center;
+}
+
+.tab-button-selected {
+    margin-top: 20px;
+    background-color: #f4f4f4;
+    height: 50px;
+    border-width: 0px;
+    width: 300px;
+    font-size: 1.2rem;
+    font-family: "Open Sans Light";
+    color: #346cb0;
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
+.tab-button {
+    margin-top: 20px;
+    background-color: #346cb0;
+    height: 50px;
+    border-width: 0px;
+    width: 300px;
+    font-size: 1.2rem;
+    font-family: "Open Sans Light";
+    color: #f4f4f4;
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
+.tab-button:hover {
+  background-color: #235ba0;
+}
+
+.nav-container {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.nav-title {
+    font-family: "Azedo";
+    font-size: 2rem;
+    color: white;
+    padding: 10px;
+}
+
+.main-content-container {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 30px;
+}
+
+.secondary-bubble{
+    margin-top: 30px !important;
+}
+
+.data-view-bubble {
+    background-color: white;
+    width: 94%;
+    float: left;
+    margin: 1%;
+    padding-left: 40px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.performance-bubble {
+    background-color: white;
+    width: 94%;
+    float: left;
+    height: 350px;
+    margin: 1%;
+    padding-left: 40px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.importance-bubble {
+    background-color: white;
+    width: 94%;
+    float: left;
+    height: 410px;
+    margin: 1%;
+    padding-left: 40px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.table-bubble {
+    background-color: white;
+    width: 94%;
+    float: left;
+    margin: 1%;
+    padding-left: 40px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.half-bubble {
+    background-color: white;
+    width: 43.8%;
+    float: left;
+    height: 300px;
+    margin: 1%;
+    padding-left: 40px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.bubble-title {
+    font-family: "Open Sans Light";
+    height: 50px;
+    padding: 10px;
+    margin-left: -20px;
+    color: #767676;
+    font-size: 1.2rem;
+    font-weight: lighter;
+}
+
+.plot-title {
+    height: 30px !important;
+}
