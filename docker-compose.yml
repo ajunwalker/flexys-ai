@@ -1,0 +1,10 @@
+version: '3'
+services:
+  flexys:
+    build: .
+    image: flexys-image
+    container_name: flexys
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
