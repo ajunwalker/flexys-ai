@@ -96,7 +96,7 @@ jQuery(document).ready(function(){
 });
 
 async function start(id) {
-  const response = await fetch('http://127.0.0.1:8000/column/' + id, {
+  const response = await fetch('http://0.0.0.0:8000/column/' + id, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ async function start(id) {
 async function fetch_models(id) {
 
   // Get model information using Django REST API
-  const modelResponse = await fetch('http://127.0.0.1:8000/model/' + id, {
+  const modelResponse = await fetch('http://0.0.0.0:8000/model/' + id, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ async function fetch_models(id) {
     performance_config['data']['datasets'][2]['borderColor'].push('rgba(196, 88, 80, 1)');
   }
 
-  const columnResponse = await fetch('http://127.0.0.1:8000/column/' + id, {
+  const columnResponse = await fetch('http://0.0.0.0:8000/column/' + id, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

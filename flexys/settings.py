@@ -25,7 +25,7 @@ SECRET_KEY = 't=w5hbl$7^kfqb4vqsu2e&ne6_*d+)d8ae7b0x($^2el6ry3*r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['0.0.0.0', 'django-env.ur4htzuj2p.ap-northeast-1.elasticbeanstalk.com']
 
 
 # Application definition
@@ -120,5 +120,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/static'
 MEDIA_URL =  '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
