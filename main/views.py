@@ -15,7 +15,7 @@ class GetProjectInfo(generics.ListAPIView):
     serializer_class = ProjectSerializer
 
     def get_queryset(self):
-        return Project.objects.get(pk=self.kwargs['id'])
+        return Project.objects.filter(id=self.kwargs['id'])
 
 
 class GetColumnInfo(generics.ListAPIView):
@@ -47,6 +47,12 @@ def upload_view(request):
 
     return render(request, 'upload.html')
 
+
 # Create your views here.
 def index(request, id):
+
+    proj = Project.objects.get(id=id)
+    if proj.models_complete == False:
+        return render(request, 'loading.html', {'id': id})
+
     return render(request, 'main.html', {'id': id})

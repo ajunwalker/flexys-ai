@@ -1,0 +1,55 @@
+.bubble {
+    margin: auto;
+    background-color: rgba(244, 244, 244, 0.8);
+    width: 335px;
+    height: 200px;
+    border-radius: 10px;
+    padding-left: 325px;
+    padding-right: 300px;
+    padding-top: 50px;
+    padding-bottom: 200px;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    text-align:center;
+}
+
+.status-title {
+    font-family: "Open Sans Light";
+    text-align: center;
+    color: #4a4a4a;
+}
+
+.status-icon {
+    border-radius: 40px;
+    width: 50px;
+    height: 50px;
+    background-color: #ffcd02;
+    float: left;
+    border-width: 4px;
+    border-color: #4cd964;
+    border-style: solid;
+}
+
+.status-text {
+    float: left;
+    font-family: "Open Sans Light";
+    color: #8e8e93;
+    font-size: 20px;
+    margin-top: 15px;
+    text-align:center;
+    width: 100%;
+}
+
+.status-text-selected {
+    color: #2b2b2b;
+}
+
+.status-row {
+    height: 75px;
+    text-align: center;
+}
+
+.home-gradient {
+    background-color: #346cb0;
+    background-image: none;
+}

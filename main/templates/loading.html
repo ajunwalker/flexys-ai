@@ -1,0 +1,49 @@
+<html>
+
+  <head>
+    {% load static %}
+    <style>
+      @font-face {
+        font-family: "Azedo";
+        src: url("{% static 'azedo/Azedo-Bold.otf' %}") format("opentype");
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'loading.css' %}" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{% static 'loading.js' %}"></script>
+  </head>
+
+  <body>
+
+    <div class="home-gradient">
+
+      <!-- BEGIN FIRST NAVIGATION BAR -->
+      <nav class="nav-black">
+        <div class="nav-container">
+          <div class="nav-title">Flexys</div>
+        </div>
+      </nav>
+
+      <div class="main-content-container">
+        <div class="bubble">
+          <h1 class="status-title">Progress Status</h1>
+          <br>
+          <br>
+          <div class="status-row">
+            <label id="analyze-label" class="status-text status-text-selected">1.&nbsp; Analyzing data</label>
+          </div>
+          <div class="status-row">
+            <label id="generate-label" class="status-text">2.&nbsp; Generating models</label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </body>
+  <script>
+    start("{{id}}")
+  </script>
+
+</html>

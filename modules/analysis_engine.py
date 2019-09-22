@@ -1,7 +1,10 @@
 import pandas as pd
 import uuid
-from main.models import Project, Column, Model
+from threading import Thread
+
 from sklearn.preprocessing import Imputer, LabelEncoder
+
+from main.models import Project, Column, Model
 from .ml_model_search import ModelSearcher
 
 
@@ -72,11 +75,7 @@ def run_models(X, y, project):
     return searcher.feature_importances
 
 
-def run(new_project, file_path):
-
-    # Open CSV
-    df = pd.read_csv(file_path)
-    columns = save_columns(df, new_project)
+def preprocess(df):
 
     target_column = df.columns[-1]
     X, y = df.drop(target_column, axis=1), df[target_column]
@@ -88,11 +87,29 @@ def run(new_project, file_path):
             X[col] = X[col].fillna('None')
             X[col] = LabelEncoder().fit_transform(X[col])
 
+    return X, y
+
+
+def run_engine(new_project, df):
+    columns = save_columns(df, new_project)
+    X, y = preprocess(df)
+
     importances = run_models(X, y, new_project)
 
     for column, importance in zip(columns, importances):
         column.importance = round(importance, 3)
         column.save()
+
+    new_project.models_complete = True
+    new_project.save()
+
+
+def run(new_project, file_path):
+
+    # Open CSV
+    df = pd.read_csv(file_path)
+    thread = Thread(target=run_engine, args=(new_project, df))
+    thread.start()
 
 
 def create_project():
