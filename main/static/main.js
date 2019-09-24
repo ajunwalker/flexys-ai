@@ -74,13 +74,29 @@ var importance_config = {
 
 jQuery(document).ready(function(){
 
+  $("#data-analytics-view").hide();
   $("#machine-learning-view").hide();
+
+  $("#data-overview-button").click(function(){
+    $('#data-overview-button').css('color', '#346cb0');
+    $('#data-overview-button').css('background-color', '#f4f4f4');
+    $('#data-analytics-button').css('color', '#f4f4f4');
+    $('#data-analytics-button').css('background-color', '#346cb0');
+    $('#machine-learning-button').css('color', '#f4f4f4');
+    $('#machine-learning-button').css('background-color', '#346cb0');
+    $("#data-analytics-view").hide();
+    $("#machine-learning-view").hide();
+    $("#data-overview-view").show();
+  });
 
   $("#data-analytics-button").click(function(){
     $('#data-analytics-button').css('color', '#346cb0');
     $('#data-analytics-button').css('background-color', '#f4f4f4');
+    $('#data-overview-button').css('color', '#f4f4f4');
+    $('#data-overview-button').css('background-color', '#346cb0');
     $('#machine-learning-button').css('color', '#f4f4f4');
     $('#machine-learning-button').css('background-color', '#346cb0');
+    $("#data-overview-view").hide();
     $("#machine-learning-view").hide();
     $("#data-analytics-view").show();
   });
@@ -88,15 +104,18 @@ jQuery(document).ready(function(){
   $("#machine-learning-button").click(function(){
     $('#machine-learning-button').css('color', '#346cb0');
     $('#machine-learning-button').css('background-color', '#f4f4f4');
+    $('#data-overview-button').css('color', '#f4f4f4');
+    $('#data-overview-button').css('background-color', '#346cb0');
     $('#data-analytics-button').css('color', '#f4f4f4');
     $('#data-analytics-button').css('background-color', '#346cb0');
+    $("#data-overview-view").hide();
     $("#data-analytics-view").hide();
     $("#machine-learning-view").show();
   });
 });
 
-async function start(id) {
-  const response = await fetch('http://0.0.0.0:8000/column/' + id, {
+async function start(id, host) {
+  const response = await fetch(host + '/column/' + id, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -127,10 +146,10 @@ async function start(id) {
   }
 }
 
-async function fetch_models(id) {
+async function fetch_models(id, host) {
 
   // Get model information using Django REST API
-  const modelResponse = await fetch('http://0.0.0.0:8000/model/' + id, {
+  const modelResponse = await fetch(host + '/model/' + id, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -139,24 +158,70 @@ async function fetch_models(id) {
   });
   const modelJson = await modelResponse.json();
 
+  // Get model information using Django REST API
+  const projectResponse = await fetch(host + '/projects/' + id, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  });
+  const projectJson = await projectResponse.json();
+
+  var models = ['svm', 'rf']
+
   // Iterate over each model and get their respective accuracy, f1 and roc score
   for (var i = 0; i < modelJson.length; i++){
     var obj = modelJson[i];
     performance_config['data']['labels'].push(obj['name']);
-    performance_config['data']['datasets'][0]['data'].push(obj['accuracy']);
-    performance_config['data']['datasets'][0]['backgroundColor'].push('rgba(54, 162, 235, 0.3)');
-    performance_config['data']['datasets'][0]['borderColor'].push('rgba(54, 162, 235, 1)');
 
-    performance_config['data']['datasets'][1]['data'].push(obj['f1']);
-    performance_config['data']['datasets'][1]['backgroundColor'].push('rgba(60, 186, 159, 0.3)');
-    performance_config['data']['datasets'][1]['borderColor'].push('rgba(60, 186, 159, 1)');
+    var metrics = ['accuracy', 'f1', 'roc'];
+    var colors = ['54, 162, 235', '60, 186, 159', '196, 88, 80']
 
-    performance_config['data']['datasets'][2]['data'].push(obj['roc']);
-    performance_config['data']['datasets'][2]['backgroundColor'].push('rgba(196, 88, 80, 0.3)');
-    performance_config['data']['datasets'][2]['borderColor'].push('rgba(196, 88, 80, 1)');
+    for (var j = 0; j < metrics.length; j++){
+      performance_config['data']['datasets'][j]['data'].push(obj[metrics[j]]);
+      performance_config['data']['datasets'][j]['backgroundColor'].push('rgba(' + colors[j] + ', 0.3)');
+      performance_config['data']['datasets'][j]['borderColor'].push('rgba(' + colors[j] + ', 1)');
+    }
+
+    params = JSON.parse(obj['params'].replace(/'/g, '"'));
+    for (key in params) {
+      document.getElementById(models[i] + '-' + key).innerHTML = key + ': ' + params[key];
+    }
+
+    document.getElementById(models[i] + '-fit_time').innerHTML = 'Train Runtime: ' + obj['fit_time'] + 's';
+    document.getElementById(models[i] + '-score_time').innerHTML = 'Test Runtime: ' + obj['score_time'] + 's';
+    document.getElementById(models[i] + '-model_size').innerHTML = 'Model Size: ' + obj['model_size'] + 'KB';
+
+    var labels = JSON.parse(projectJson[0]['columns'].replace(/'/g, '"'));
+    var bottom_tr = document.createElement("TR");
+    var left_tr = document.createElement("TR");
+
+    matrix = JSON.parse(obj['confusion']);
+    for (var j = 0; j < matrix.length; ++j) {
+      var tr = document.createElement("TR");
+      for (var k = 0; k < matrix[j].length; ++k) {
+        var td = document.createElement("TD");
+        var text = document.createTextNode(matrix[j][k]);
+        td.appendChild(text)
+        tr.appendChild(td)
+      }
+      document.getElementById(models[i] + "-confusion").appendChild(tr);
+
+      var bottom_td = document.createElement("TD");
+      var left_td = document.createElement("TD");
+      var bottom_text = document.createTextNode(labels[j]);
+      var left_text = document.createTextNode(labels[j]);
+      bottom_td.appendChild(bottom_text)
+      bottom_tr.appendChild(bottom_td)
+      left_td.appendChild(left_text)
+      left_tr.appendChild(left_td)
+    }
+    document.getElementById(models[i] + "-confusion-bottom").appendChild(bottom_tr);
+    document.getElementById(models[i] + "-confusion-left").appendChild(left_tr);
   }
 
-  const columnResponse = await fetch('http://0.0.0.0:8000/column/' + id, {
+  const columnResponse = await fetch(host + '/column/' + id, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

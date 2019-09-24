@@ -18,28 +18,31 @@
 
     <div class="home-gradient">
 
-      <!-- BEGIN FIRST NAVIGATION BAR -->
-      <nav class="nav-black">
-        <div class="nav-container">
-          <div class="nav-title">Flexys</div>
-        </div>
-      </nav>
-
       <div class="main-content-container">
 
-        <h1 class="landing-title">Automated data analytics and machine learning</h1>
+        <h1 class="landing-title">Flexys AI</h1>
+
+        <h2 class="landing-description">Experience automated analysis and machine learning</h2>
 
         <div class="row">
           <div class="button-wrapper">
             <form method="post" enctype="multipart/form-data">
               {% csrf_token %}
               <label for="file-upload" class="upload-button">
-                  Click here to upload your CSV file
+                  Click here to upload CSV file
               </label>
               <input id="file-upload" type="file" name="myfile" onchange="this.form.submit();">
+              <label for="test-upload" class="test-upload-button">
+                  Click here to test without data
+              </label>
+              <input id="test-upload" style="display:none" type="submit" name="testfile" onchange="this.form.submit();">
             </form>
           </div>
         </div>
+        <h3 class="landing-note">
+          *Only classification is supported at the moment.<br>
+          *Please make sure the target column is the rightmost column.
+        </h3>
       </div>
     </div>
   </body>

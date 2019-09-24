@@ -51,8 +51,15 @@ def upload_view(request):
 # Create your views here.
 def index(request, id):
 
+    host = request.get_host()
+    print('Host:', host)
+    if host == '0.0.0.0:8000':
+        host = 'http://' + host
+    else:
+        host = 'https://' + host
+
     proj = Project.objects.get(id=id)
     if proj.models_complete == False:
-        return render(request, 'loading.html', {'id': id})
+        return render(request, 'loading.html', {'id': id, 'host': host})
 
-    return render(request, 'main.html', {'id': id})
+    return render(request, 'main.html', {'id': id, 'host': host})

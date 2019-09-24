@@ -5,7 +5,7 @@ from .models import Project, Column, Model
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ("id", "analytics_complete", "models_complete")
+        fields = ("id", "analytics_complete", "models_complete", "columns")
 
 
 class ColumnSerializer(serializers.ModelSerializer):
@@ -18,4 +18,5 @@ class ColumnSerializer(serializers.ModelSerializer):
 class ModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Model
-        fields = ("name", "accuracy", "f1", "roc")
+        fields = ("name", "accuracy", "f1", "roc", "fit_time", "score_time",
+                  "model_size", "params", "confusion")
