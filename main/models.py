@@ -4,6 +4,7 @@ class Project(models.Model):
     id = models.UUIDField(primary_key=True)
     analytics_complete = models.BooleanField(default=False)
     models_complete = models.BooleanField(default=False)
+    columns = models.TextField(blank=True)
 
     def __str__(self):
         return str(self.id)
@@ -31,6 +32,11 @@ class Model(models.Model):
     accuracy = models.FloatField(default=0.0)
     roc = models.FloatField(default=0.0)
     f1 = models.FloatField(default=0.0)
+    fit_time = models.FloatField(default=0.0)
+    score_time = models.FloatField(default=0.0)
+    model_size = models.FloatField(default=0.0)
+    params = models.TextField()
+    confusion = models.TextField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):

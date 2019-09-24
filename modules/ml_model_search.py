@@ -1,11 +1,14 @@
 # System imports
 from collections import defaultdict
-import numpy as np
+import pickle
+import sys
 
 # Third party imports
+import numpy as np
 from GPyOpt.methods import BayesianOptimization
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.linear_model import SGDClassifier, SGDRegressor
+from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_validate, train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
@@ -50,10 +53,6 @@ class ModelSearcher:
         if 'SVC' in self.current_model or 'SVR' in self.current_model:
             param_dict['early_stopping'] = True
 
-        # Change loss for quadratic SVM
-        if 'Quadratic' in self.current_model:
-            param_dict['loss'] = 'squared_hinge'
-
         # Construct parameter dict for model
         for param, value in zip(self.grids[self.current_model], params[0]):
             cast = self.param_types[param['name']]
@@ -69,17 +68,28 @@ class ModelSearcher:
             cv=min(5, len(self.y)),
             return_estimator=True)
 
-        acc = cv['test_accuracy'].mean()
-        roc = cv['test_roc_auc'].mean()
-        f1 = cv['test_f1'].mean()
+        if cv['test_accuracy'].mean() > self.results[self.current_model]['acc']:
 
-        new_acc = max(acc, self.results[self.current_model]['acc'])
-        new_roc = max(roc, self.results[self.current_model]['roc'])
-        new_f1 = max(f1, self.results[self.current_model]['f1'])
+            self.results[self.current_model]['acc'] = cv['test_accuracy'].mean()
+            self.results[self.current_model]['roc'] = cv['test_roc_auc'].mean()
+            self.results[self.current_model]['f1'] = cv['test_f1'].mean()
 
-        self.results[self.current_model]['acc'] = new_acc
-        self.results[self.current_model]['roc'] = new_roc
-        self.results[self.current_model]['f1'] = new_f1
+            if 'early_stopping' in param_dict:
+                del param_dict['early_stopping']
+            del param_dict['n_jobs']
+
+            self.results[self.current_model]['params'] = str(param_dict)
+            self.results[self.current_model]['fit_time'] = cv['fit_time'].mean()
+            self.results[self.current_model]['score_time'] = cv['score_time'].mean()
+
+            model_bytes = sys.getsizeof(pickle.dumps(cv['estimator'][0]))
+            self.results[self.current_model]['model_size'] = model_bytes // 1000
+
+            preds = cv['estimator'][0].predict(self.X)
+            confusion = confusion_matrix(list(self.y), preds, list(set(self.y)))
+            confusion = [[val for val in row] for row in confusion]
+            self.results[self.current_model]['confusion'] = confusion
+
 
         if self.current_model == 'Random Forest':
             feature_importances = []

@@ -68,6 +68,11 @@ def run_models(X, y, project):
             accuracy=round(scores['acc'], 3),
             roc=round(scores['roc'], 3),
             f1=round(scores['f1'], 3),
+            fit_time=round(scores['fit_time'], 3),
+            score_time=round(scores['score_time'], 3),
+            model_size=round(scores['model_size'], 3),
+            params=scores['params'],
+            confusion=scores['confusion'],
             project=project
         )
         new_model.save()
@@ -93,6 +98,10 @@ def preprocess(df):
 def run_engine(new_project, df):
     columns = save_columns(df, new_project)
     X, y = preprocess(df)
+    encoder = LabelEncoder()
+    y = encoder.fit_transform(y)
+    new_project.columns = list(encoder.classes_)
+    new_project.save()
 
     importances = run_models(X, y, new_project)
 
