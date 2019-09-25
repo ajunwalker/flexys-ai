@@ -40,6 +40,11 @@ class GetModelInfo(generics.ListAPIView):
 
 def upload_view(request):
 
+    if 'testfile' in request.POST:
+        id = 'd3d59568-1192-4e43-b856-296289ce3641'
+        host = 'http://' + request.get_host()
+        return render(request, 'main.html', {'id': id, 'host': host})
+
     if 'myfile' in request.FILES:
         new_project = analysis_engine.create_project()
         analysis_engine.run(new_project, request.FILES['myfile'])
@@ -56,7 +61,7 @@ def index(request, id):
     if host == '0.0.0.0:8000':
         host = 'http://' + host
     else:
-        host = 'https://' + host
+        host = 'http://' + host
 
     proj = Project.objects.get(id=id)
     if proj.models_complete == False:
