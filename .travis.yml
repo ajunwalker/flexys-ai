@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.7"
+install:
+  - pip install coverage
+  - pip install matplotlib==3.1.1
+  - pip install -r requirements.txt
+script:
+  - coverage run -m pytest
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
