@@ -3,7 +3,7 @@ import pandas as pd
 import threading
 
 from django.shortcuts import redirect, render
-from modules import analysis_engine
+from modules import engine
 from rest_framework import generics
 from .models import Project, Column, Model
 from .serializers import ProjectSerializer, ColumnSerializer, ModelSerializer
@@ -46,15 +46,21 @@ def upload_view(request):
         return render(request, 'main.html', {'id': id, 'host': host})
 
     if 'myfile' in request.FILES:
-        new_project = analysis_engine.create_project()
-        analysis_engine.run(new_project, request.FILES['myfile'])
-        return redirect('/project/' + str(new_project.id))
+        analysis_engine = engine.AnalysisEngine()
+        analysis_engine.run(request.FILES['myfile'])
+        return redirect('/project/' + str(analysis_engine.id))
 
     return render(request, 'upload.html')
 
 
 # Create your views here.
 def index(request, id):
+    """
+    Handles pages related to a specific project.
+
+    Case 1:
+    Case 2:
+    """
 
     host = request.get_host()
     print('Host:', host)
