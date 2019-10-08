@@ -32,11 +32,16 @@ class Model(models.Model):
     accuracy = models.FloatField(default=0.0)
     roc = models.FloatField(default=0.0)
     f1 = models.FloatField(default=0.0)
+    roc = models.FloatField(default=0.0)
+    explained_variance = models.FloatField(default=0.0)
+    r2 = models.FloatField(default=0.0)
+    mae = models.FloatField(default=0.0)
     fit_time = models.FloatField(default=0.0)
     score_time = models.FloatField(default=0.0)
     model_size = models.FloatField(default=0.0)
     params = models.TextField()
     confusion = models.TextField()
+    errors = models.TextField(default="")
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     def __str__(self):
