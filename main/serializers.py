@@ -18,5 +18,6 @@ class ColumnSerializer(serializers.ModelSerializer):
 class ModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Model
-        fields = ("name", "accuracy", "f1", "roc", "fit_time", "score_time",
-                  "model_size", "params", "confusion")
+        fields = ("name", "accuracy", "f1", "roc", "explained_variance", "r2",
+                  "mae", "fit_time", "score_time", "model_size", "params",
+                  "confusion", "errors")

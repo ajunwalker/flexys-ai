@@ -1,8 +1,10 @@
+import numpy as np
 import pandas as pd
 import uuid
 from threading import Thread
 
 from django.db import models
+from scipy import stats
 from sklearn.preprocessing import Imputer, LabelEncoder
 
 from main.models import Project, Column, Model
@@ -19,12 +21,44 @@ class AnalysisEngine:
         self.project.save()
 
 
+    def infer_target_type(self) -> None:
+        """
+        Attempts to infer the target columns data type.
+        """
+        self.target_column = self.df.columns[-1]
+        if self.df[self.target_column].dtype == 'object':
+            self.output = 'classification'
+        else:
+            column_arr = self.df[self.target_column]
+            column_arr = column_arr.dropna()
+            points = 0
+
+            # Check if column only contains ints
+            if np.array_equal(column_arr, column_arr.astype(int)):
+                points += 0.7
+
+            # Check if column only contains floats
+            elif np.array_equal(column_arr, column_arr.astype(float)):
+                points += 0.8
+
+            # Check if column is normally distributed
+            k2, p = stats.normaltest(column_arr)
+            if p >= 0.1:
+                points += 0.3
+
+            # Check if number of unique values is low
+            unique_values = set(column_arr)
+            if len(unique_values) > len(column_arr) * 0.1:
+                points += 0.3
+
+            self.output = 'regression' if points > 1.0 else 'classification'
+
+
     def save_columns(self):
         """
         Analyzes each column in the data frame, and saves the meta data
         in the DB.
         """
-        target_column = self.df.columns[-1]
         self.columns = []
 
         for col in self.df.columns:
@@ -42,7 +76,7 @@ class AnalysisEngine:
                     median=round(self.df[col].median(), 2),
                     max=round(self.df[col].max(), 2),
                     unique=0,
-                    target=(col == target_column),
+                    target=(col == self.target_column),
                     project=self.project
                 )
                 new_column.save()
@@ -58,7 +92,7 @@ class AnalysisEngine:
                     median=0,
                     max=0,
                     unique=self.df[col].nunique(),
-                    target=(col == target_column),
+                    target=(col == self.target_column),
                     project=self.project
                 )
                 new_column.save()
@@ -74,7 +108,7 @@ class AnalysisEngine:
         Performs model search, and saves the results of each machine learning
         model.
         """
-        searcher = ModelSearcher()
+        searcher = ModelSearcher(self.output)
         searcher.fit(self.X, self.y, 1)
 
         for model_name, scores in searcher.results.items():
@@ -83,11 +117,15 @@ class AnalysisEngine:
                 accuracy=round(scores['acc'], 3),
                 roc=round(scores['roc'], 3),
                 f1=round(scores['f1'], 3),
+                explained_variance=round(scores['explained_variance'], 3),
+                r2=round(scores['r2'], 3),
+                mae=round(scores['mae'], 3),
                 fit_time=round(scores['fit_time'], 3),
                 score_time=round(scores['score_time'], 3),
                 model_size=round(scores['model_size'], 3),
                 params=scores['params'],
                 confusion=scores['confusion'],
+                errors=scores['errors'],
                 project=self.project
             )
             new_model.save()
@@ -107,7 +145,6 @@ class AnalysisEngine:
         """
         Imputes missing values from data set, and converts strings to numbers.
         """
-        self.target_column = self.df.columns[-1]
         self.X = self.df.drop(self.target_column, axis=1)
         self.y = self.df[self.target_column]
 
@@ -120,16 +157,20 @@ class AnalysisEngine:
                 self.X[col] = LabelEncoder().fit_transform(self.X[col])
 
         # Preprocess targets
-        encoder = LabelEncoder()
-        self.y = encoder.fit_transform(self.y)
-        self.project.columns = list(encoder.classes_)
-        self.project.save()
+        if self.output == 'classification':
+            encoder = LabelEncoder()
+            self.y = encoder.fit_transform(self.y)
+            self.project.columns = list(encoder.classes_)
+            self.project.save()
+        else:
+            self.y = self.y.fillna(value=self.y.mean())
 
 
-    def run_engine(self):
+    def run_engine(self) -> None:
         """
         Entry point for analysis and model search.
         """
+        self.infer_target_type()
         self.save_columns()
         self.preprocess()
         self.run_models()

@@ -39,7 +39,9 @@ class GetModelInfo(generics.ListAPIView):
 
 
 def upload_view(request):
-
+    """
+    Handles requests related to landing page.
+    """
     if 'testfile' in request.POST:
         id = 'd3d59568-1192-4e43-b856-296289ce3641'
         host = 'http://' + request.get_host()
@@ -53,21 +55,12 @@ def upload_view(request):
     return render(request, 'upload.html')
 
 
-# Create your views here.
 def index(request, id):
     """
-    Handles pages related to a specific project.
-
-    Case 1:
-    Case 2:
+    Handles requests related to projects.
     """
-
     host = request.get_host()
-    print('Host:', host)
-    if host == '0.0.0.0:8000':
-        host = 'http://' + host
-    else:
-        host = 'http://' + host
+    host = 'http://' + host
 
     proj = Project.objects.get(id=id)
     if proj.models_complete == False:
