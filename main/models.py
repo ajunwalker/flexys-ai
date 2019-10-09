@@ -31,7 +31,6 @@ class Model(models.Model):
     name = models.CharField(max_length=40, default=None)
     accuracy = models.FloatField(default=0.0)
     f1 = models.FloatField(default=0.0)
-    roc = models.FloatField(default=0.0)
     explained_variance = models.FloatField(default=0.0)
     r2 = models.FloatField(default=0.0)
     mae = models.FloatField(default=0.0)
