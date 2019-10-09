@@ -40,10 +40,10 @@ class ModelSearcher:
             'Random Forest'         : RandomForestRegressor,
         }
 
-        if output_type == 'categorical':
+        if output_type == 'classification':
             self.available_models = self.available_classifiers
             self.grids = classifier_config
-            self.scoring = ['f1', 'accuracy', 'roc_auc']
+            self.scoring = ['f1_micro', 'accuracy']
         else:
             self.available_models = self.available_regressors
             self.grids = regressor_config
@@ -100,8 +100,8 @@ class ModelSearcher:
             if mean_score > self.results[curr_model]['acc']:
                 improvement = True
                 self.results[curr_model]['acc'] = cv['test_accuracy'].mean()
-                self.results[curr_model]['roc'] = cv['test_roc_auc'].mean()
-                self.results[curr_model]['f1'] = cv['test_f1'].mean()
+                #self.results[curr_model]['roc'] = cv['test_roc_auc'].mean()
+                self.results[curr_model]['f1'] = cv['test_f1_micro'].mean()
 
                 # Save confusion matrix
                 preds = cv['estimator'][0].predict(features)

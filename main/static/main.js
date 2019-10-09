@@ -14,12 +14,6 @@ var performance_config = {
       borderColor: [],
       borderWidth: 1
     },
-    {
-      data: [],
-      backgroundColor: [],
-      borderColor: [],
-      borderWidth: 1
-    },
   ]},
   options: {
     responsive: false,
@@ -203,13 +197,12 @@ async function fetch_models(id, host) {
   const projectJson = await projectResponse.json();
 
   var models = ['svm', 'rf']
-  if (modelJson[0]['accuracy'] == 0 && modelJson[0]['f1'] == 0 && modelJson[0]['roc'] == 0) {
-    performance_config['data']['datasets'].pop();
+  if (modelJson[0]['accuracy'] == 0 && modelJson[0]['f1'] == 0) {
     var metrics = ['explained_variance', 'r2'];
     var names = ['Explained Variance Score', 'R2 Score'];
   } else {
-    var metrics = ['accuracy', 'f1', 'roc'];
-    var names = ['Accuracy Score', 'F1 Score', 'AUC-ROC Score'];
+    var metrics = ['accuracy', 'f1'];
+    var names = ['Accuracy Score', 'F1 Score'];
   }
 
   // Iterate over each model and get their respective accuracy, f1 and roc score
@@ -235,6 +228,8 @@ async function fetch_models(id, host) {
     document.getElementById(models[i] + '-model_size').innerHTML = 'Model Size: ' + obj['model_size'] + 'KB';
 
     if (obj['confusion'] != 0){
+      document.getElementById('rf-error-chart').style.display = 'none';
+      document.getElementById('svm-error-chart').style.display = 'none';
 
       var labels = JSON.parse(projectJson[0]['columns'].replace(/'/g, '"'));
       var bottom_tr = document.createElement("TR");
