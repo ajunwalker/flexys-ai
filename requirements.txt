@@ -1,4 +1,4 @@
-Django==2.2.5
+Django==2.2.24
 djangorestframework==3.10.3
 GPyOpt==1.2.5
 matplotlib==3.1.1
